@@ -12,10 +12,10 @@
 }
 
 [data-theme="light"] {
-    --bg-primary: #F4F4F4;
+    --bg-primary: #F0F5F9;
     --bg-secondary: #f6f8fa;
     --bg-tertiary: #eaeef2;
-    --text-primary: #0C2B4E;
+    --text-primary: #1E2022;
     --text-secondary: #656d76;
     --text-muted: #8c959f;
     --accent: #0969da;
@@ -115,15 +115,24 @@ body {
 
 .sidebar-header {
     margin-bottom: 30px;
-    padding-bottom: 20px;
+    margin-top: 20px;
+    padding-bottom: 30px;
     border-bottom: 1px solid var(--border);
 }
 
 .sidebar-title {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
     color: var(--text-primary);
     margin-bottom: 10px;
+}
+
+.emoji {
+    color: var(--accent)
+}
+
+.os {
+    color: var(--accent)
 }
 
 .sidebar-description {
@@ -155,7 +164,8 @@ body {
 
 .sidebar nav a:hover {
     color: var(--accent);
-    padding-left: 5px;
+    /* padding-left: 5px; */
+    text-decoration: underline;
 }
 
 .sidebar nav a.active {
@@ -190,6 +200,7 @@ body {
 .github-link:hover {
     background: var(--hover);
     border-color: var(--accent);
+    text-decoration: none;
 }
 
 .github-link::before {
@@ -199,6 +210,7 @@ body {
 
 .toc {
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .toc h3 {
@@ -215,6 +227,7 @@ body {
 
 .toc li {
     margin-bottom: 8px;
+    margin-left: 15px
 }
 
 .toc a {
@@ -257,8 +270,9 @@ body {
 /* Main Content */
 header {
     border-bottom: 1px solid var(--border);
-    padding-bottom: 20px;
+    padding-bottom: 50px;
     margin-bottom: 40px;
+    margin-top: 20px;
 }
 
 .page-title {
@@ -445,6 +459,10 @@ footer p {
     
     .sidebar-overlay {
         display: block;
+    }
+
+    header {
+        margin-top: 0px;
     }
     
     .main-content {
