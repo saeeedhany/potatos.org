@@ -1,8 +1,8 @@
 title: "potatOS"
 logo: "./assets/images/cosmos.png"
 description: "Building an operating system from scratch"
-baseurl: ""
-url: ""
+baseurl: "/potatos.org"
+url: "https://saeeedhany.github.io"
 
 markdown: kramdown
 permalink: /posts/:title/
