@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1 — Boot Process & Real Mode Foundations - potat</title>
+    <meta name="description" content="Building an operating system from scratch">
+    <link rel="stylesheet" href="/potatos.org/assets/css/main.css">
+    <link rel="stylesheet" href="/potatos.org/assets/css/all.min.css">
+</head>
+<body>
+    <!-- Hamburger Menu -->
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Sidebar Overlay (for mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="site-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title"><span class="emoji">❀</span> potat<span class="os">OS</span></div>
+                <div class="sidebar-description">Building an operating system from scratch</div>
+            </div>
+
+            <nav>
+                <ul>
+                    <li><a href="/potatos.org/" >~/home</a></li>
+                    <li><a href="/potatos.org/posts" class="active">~/posts</a></li>
+                </ul>
+            </nav>
+
+            <div class="github-links">
+                <h3>GitHub</h3>
+                <a href="https://github.com/saeeedhany/potatOS" class="github-link" target="_blank" rel="noopener">OS Repository</a>
+                <a href="https://github.com/saeeedhany" class="github-link" target="_blank" rel="noopener">My Profile</a>
+            </div>
+
+            <!-- Table of Contents for posts -->
+            
+            <div class="toc" id="toc">
+                <h3>On This Page</h3>
+                <ul id="toc-list"></ul>
+            </div>
+            
+
+            <button id="theme-toggle" class="theme-toggle">[light]</button>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <main>
+                <article class="post">
+    <header class="post-header">
+        <h1>Phase 1 — Boot Process & Real Mode Foundations</h1>
+        <div class="post-meta">
+            <time datetime="2025-10-14T00:00:00+03:00">
+                2025-10-14
+            </time>
+        </div>
+    </header>
+
+    <div class="post-content">
+        <h2 id="context--re-study">Context &amp; Re-study</h2>
+
+<p>After re-studying the entire boot process and reading multiple references, I started to understand how the structure <em>should</em> actually work—not just theoretically, but practically.</p>
+
+<p>This phase represents my first real step into the OS development journey. It may look small in terms of code, but conceptually, it required a lot of thinking and re-reading to truly understand what is happening under the hood.</p>
+
+<hr />
+
+<h2 id="phase-one--what-really-happens-before-the-kernel">Phase One — What Really Happens Before the Kernel</h2>
+
+<p>When the user presses the power button, the process does <strong>not</strong> start with our code directly. Instead, a well-defined hardware-controlled sequence begins.</p>
+
+<h3 id="cpu-reset--bios-execution">CPU Reset &amp; BIOS Execution</h3>
+
+<ol>
+  <li>The <strong>CPU</strong> receives power and immediately jumps to a predefined address known as the <strong>Reset Vector</strong> <code class="language-plaintext highlighter-rouge">0xFFFF0</code></li>
+  <li>This address resides in <strong>ROM</strong>, not RAM</li>
+  <li>From there, the CPU executes hardcoded instructions that transfer control to the <strong>BIOS</strong></li>
+  <li>The BIOS starts the <strong>POST (Power-On Self Test)</strong> process:
+    <ul>
+      <li>Checks memory</li>
+      <li>Initializes hardware components</li>
+      <li>Verifies system integrity</li>
+    </ul>
+  </li>
+  <li>After POST completes, the BIOS searches for a <strong>bootable device</strong></li>
+</ol>
+
+<hr />
+
+<h2 id="boot-sector--bootloader-loading">Boot Sector &amp; Bootloader Loading</h2>
+
+<p>Once a bootable device is found:</p>
+
+<ul>
+  <li>The BIOS reads the <strong>first sector (512 bytes)</strong> from that device</li>
+  <li>This sector is loaded into memory at <strong><code class="language-plaintext highlighter-rouge">0x7C00</code></strong></li>
+  <li>The CPU then jumps to this address and starts executing the bootloader code</li>
+</ul>
+
+<p>From this point on, <strong>everything that happens depends entirely on the bootloader</strong>.</p>
+
+<hr />
+
+<h2 id="real-mode-constraints">Real Mode Constraints</h2>
+
+<p>At this stage, the CPU is still running in <strong>Real Mode</strong>:</p>
+
+<ul>
+  <li>16-bit execution</li>
+  <li>Direct BIOS interrupt access</li>
+  <li>Limited memory addressing</li>
+  <li>Interrupts rely on the <strong>IVT (Interrupt Vector Table)</strong></li>
+</ul>
+
+<p>This mode is perfect for early setup, but <strong>not suitable for running a kernel</strong>. To build a real operating system, we must eventually switch to <strong>Protected Mode</strong>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[BIOS]
+   ↓
+Loads boot sector → 0x7C00 (Real Mode)
+   ↓
+[Bootloader]
+   ↓
+Print → Load kernel via int 0x13 (BIOS)
+   ↓
+Disable interrupts
+   ↓
+Setup GDT
+   ↓
+Enable Protected Mode (CR0)
+   ↓
+Far Jump to 32-bit mode
+   ↓
+[Kernel Entry Point]
+
+</code></pre></div></div>
+
+<p><em>Simple graph for the whole process from the BIOS to the Kernel</em></p>
+
+<h3 id="random-study-gems">Random Study Gems</h3>
+
+<p><img src="/potatos.org/assets/images/board.webp" alt="Study Board Diagram" /></p>
+
+<hr />
+
+<h2 id="bootloader-mission">Bootloader Mission</h2>
+
+<p>The mission of the bootloader is <strong>not</strong> to implement complex logic. Its responsibility is to <strong>prepare the environment for the kernel</strong>.</p>
+
+<p>To make this clearer, instead of diving into abstract theory, it is more efficient to define the <strong>bootloader structure</strong>.</p>
+
+<h3 id="bootloader-file-structure">Bootloader File Structure</h3>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bootloader.asm
+├── [1] Bootloader header (boot signature + origin)
+├── [2] Setup stage (environment setup)
+├── [3] Display / Debug messages (optional)
+├── [4] Load kernel (using BIOS interrupts)
+├── [5] Enable A20 line
+├── [6] Setup GDT (for Protected Mode)
+├── [7] Switch to Protected Mode
+├── [8] Jump to Kernel
+└── [9] Boot signature (0xAA55)
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>Note:</strong>
+I will explain each part in detail <em>after</em> finishing the full bootloader implementation. The goal is to understand every step practically, not just theoretically.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="first-working-bootloader-code">First Working Bootloader Code</h2>
+
+<p>At this point, I finally wrote a minimal bootloader that actually <strong>does something</strong>.</p>
+
+<p>Yes—it’s simple. But getting here required a lot of theoretical understanding.</p>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">; bootloader.asm - Boot sector header + minimal init</span>
+<span class="err">[</span><span class="nf">org</span> <span class="mh">0x7C00</span><span class="p">]</span>
+<span class="nf">bits</span> <span class="mi">16</span>
+
+<span class="nl">start:</span>
+    <span class="nf">cli</span>
+    <span class="nf">xor</span> <span class="nb">ax</span><span class="p">,</span> <span class="nb">ax</span>
+    <span class="nf">mov</span> <span class="nb">ds</span><span class="p">,</span> <span class="nb">ax</span>
+    <span class="nf">mov</span> <span class="nb">es</span><span class="p">,</span> <span class="nb">ax</span>
+    <span class="nf">mov</span> <span class="nb">ss</span><span class="p">,</span> <span class="nb">ax</span>
+    <span class="nf">mov</span> <span class="nb">sp</span><span class="p">,</span> <span class="mh">0x7C00</span>
+    <span class="nf">sti</span>
+
+    <span class="nf">mov</span> <span class="nb">si</span><span class="p">,</span> <span class="nv">msg</span>
+<span class="nl">.print_char:</span>
+    <span class="nf">lodsb</span>
+    <span class="nf">or</span> <span class="nb">al</span><span class="p">,</span> <span class="nb">al</span>
+    <span class="nf">jz</span> <span class="nv">.done_print</span>
+    <span class="nf">mov</span> <span class="nb">ah</span><span class="p">,</span> <span class="mh">0x0E</span>
+    <span class="nf">int</span> <span class="mh">0x10</span>
+    <span class="nf">jmp</span> <span class="nv">.print_char</span>
+<span class="nl">.done_print:</span>
+
+<span class="nl">hang:</span>
+    <span class="nf">hlt</span>
+    <span class="nf">jmp</span> <span class="nv">hang</span>
+
+<span class="nf">msg</span> <span class="nv">db</span> <span class="s">"Embryos boot"</span><span class="p">,</span> <span class="mi">0</span>
+
+<span class="kd">times</span> <span class="mi">510</span> <span class="o">-</span> <span class="p">(</span><span class="kc">$</span> <span class="o">-</span> <span class="kc">$$</span><span class="p">)</span> <span class="nv">db</span> <span class="mi">0</span>
+<span class="kd">dw</span> <span class="mh">0xAA55</span>
+</code></pre></div></div>
+
+<h2 id="understanding-the-code-high-level">Understanding the Code (High-Level)</h2>
+
+<h3 id="comments">Comments</h3>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">; bootloader.asm - Boot sector header + minimal init</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>Note:</strong>
+Anything starting with <code class="language-plaintext highlighter-rouge">;</code> is a comment. This line summarizes the purpose of the file: early boot initialization.</p>
+</blockquote>
+
+<h3 id="origin-address">Origin Address</h3>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">[</span><span class="nf">org</span> <span class="mh">0x7C00</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>This tells the assembler that the code is expected to be loaded at memory address <code class="language-plaintext highlighter-rouge">0x7C00</code>, which matches the BIOS behavior.</p>
+
+<h3 id="real-mode-execution">Real Mode Execution</h3>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">bits</span> <span class="mi">16</span>
+</code></pre></div></div>
+
+<p>This tells the assembler to generate 16-bit code, as the CPU starts in Real Mode during boot.</p>
+
+<h3 id="entry-label">Entry Label</h3>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">start:</span>
+</code></pre></div></div>
+
+<p>Labels define jump targets. This label represents the logical entry point of the bootloader.</p>
+
+<h3 id="register--stack-initialization">Register &amp; Stack Initialization</h3>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">cli</span>
+<span class="nf">xor</span> <span class="nb">ax</span><span class="p">,</span> <span class="nb">ax</span>
+<span class="nf">mov</span> <span class="nb">ds</span><span class="p">,</span> <span class="nb">ax</span>
+<span class="nf">mov</span> <span class="nb">es</span><span class="p">,</span> <span class="nb">ax</span>
+<span class="nf">mov</span> <span class="nb">ss</span><span class="p">,</span> <span class="nb">ax</span>
+<span class="nf">mov</span> <span class="nb">sp</span><span class="p">,</span> <span class="mh">0x7C00</span>
+<span class="nf">sti</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">cli</code> disables interrupts temporarily</li>
+  <li>Segment registers are cleared to avoid undefined behavior</li>
+  <li>A temporary stack is initialized</li>
+  <li><code class="language-plaintext highlighter-rouge">sti</code> re-enables interrupts after setup</li>
+</ul>
+
+<blockquote>
+  <p><strong>Important:</strong>
+Interrupts are disabled here to ensure a clean environment while registers are being configured.</p>
+</blockquote>
+
+<h3 id="output-code">Output Code</h3>
+
+<p>From:</p>
+
+<div class="language-nasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">mov</span> <span class="nb">si</span><span class="p">,</span> <span class="nv">msg</span>
+</code></pre></div></div>
+
+<p>To the printing loop, the code simply prints a string using BIOS interrupt <code class="language-plaintext highlighter-rouge">INT 0x10</code>.</p>
+
+<p>This part is intentionally kept simple and is not deeply explained here.</p>
+
+<h3 id="building--testing-the-bootloader">Building &amp; Testing the Bootloader</h3>
+
+<p><strong>Step 1: Assemble the Bootloader</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nasm <span class="nt">-f</span> bin bootloader.asm <span class="nt">-o</span> boot.bin
+</code></pre></div></div>
+
+<p><strong>Step 2: Verify Boot Sector Size</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">stat</span> <span class="nt">-c</span> <span class="s2">"%s bytes"</span> boot.bin
+</code></pre></div></div>
+
+<p>The output must be exactly <strong>512 bytes</strong>.</p>
+
+<p><strong>Step 3: Create a Bootable Image</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dd </span><span class="k">if</span><span class="o">=</span>boot.bin <span class="nv">of</span><span class="o">=</span>os.img <span class="nv">bs</span><span class="o">=</span>512 <span class="nv">count</span><span class="o">=</span>1 <span class="nv">conv</span><span class="o">=</span>notrunc
+</code></pre></div></div>
+
+<p><strong>Step 4: Boot Using QEMU</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qemu-system-x86_64 <span class="nt">-drive</span> <span class="nv">format</span><span class="o">=</span>raw,file<span class="o">=</span>os.img <span class="nt">-display</span> gtk
+</code></pre></div></div>
+
+<blockquote>
+  <p>I usually prefer SDL as well, but GTK works fine for now.</p>
+</blockquote>
+
+<p><strong>Aaaaaand here it is:</strong></p>
+
+<p><img src="/potatos.org/assets/images/boot.webp" alt="First Bootloader Running" /></p>
+
+    </div>
+</article>
+
+            </main>
+
+            <footer>
+                <p>© 2025 <strong><a href="https://saeeedhany.github.io/saeed/">Saeed</a></strong>. All rights reserved.</p>
+                <p>Building an OS from scratch</p>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="/potatos.org/assets/js/theme.js"></script>
+    <script src="/potatos.org/assets/js/mobile-menu.js"></script>
+    
+    <script src="/potatos.org/assets/js/toc.js"></script>
+    
+</body>
+</html>

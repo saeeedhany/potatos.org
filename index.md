@@ -2,6 +2,15 @@
 layout: default
 ---
 
+<div class="roadmap-banner">
+    <div class="roadmap-icon">🗺️</div>
+    <div class="roadmap-content">
+        <h2>OS Development Roadmap</h2>
+        <p>Track the complete development journey from bootloader to userspace</p>
+        <a href="{{ '/roadmap' | relative_url }}" class="roadmap-btn">View Full Roadmap →</a>
+    </div>
+</div>
+
 <header>
     <h1 class="page-title">About This Project</h1>
 </header>
@@ -19,11 +28,11 @@ layout: default
         Building an operating system requires understanding every layer of abstraction,
         from bootloaders to process schedulers. This blog documents that journey.
     </p>
-    
+
     <h3>Principles</h3>
     <p>
-        Simplicity, minimalism, and learning through implementation.
-        Every component is built to understand how it works, not just to make it work.
+    Simplicity, minimalism, and learning through implementation.
+    Every component is built to understand how it works, not just to make it work.
     </p>
 </div>
 

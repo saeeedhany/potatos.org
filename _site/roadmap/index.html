@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Environment - potat</title>
+    <meta name="description" content="Building an operating system from scratch">
+    <link rel="stylesheet" href="/potatos.org/assets/css/main.css">
+    <link rel="stylesheet" href="/potatos.org/assets/css/all.min.css">
+</head>
+<body>
+    <!-- Hamburger Menu -->
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Sidebar Overlay (for mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="site-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title"><span class="emoji">❀</span> potat<span class="os">OS</span></div>
+                <div class="sidebar-description">Building an operating system from scratch</div>
+            </div>
+
+            <nav>
+                <ul>
+                    <li><a href="/potatos.org/" >~/home</a></li>
+                    <li><a href="/potatos.org/posts" class="active">~/posts</a></li>
+                </ul>
+            </nav>
+
+            <div class="github-links">
+                <h3>GitHub</h3>
+                <a href="https://github.com/saeeedhany/potatOS" class="github-link" target="_blank" rel="noopener">OS Repository</a>
+                <a href="https://github.com/saeeedhany" class="github-link" target="_blank" rel="noopener">My Profile</a>
+            </div>
+
+            <!-- Table of Contents for posts -->
+            
+            <div class="toc" id="toc">
+                <h3>On This Page</h3>
+                <ul id="toc-list"></ul>
+            </div>
+            
+
+            <button id="theme-toggle" class="theme-toggle">[light]</button>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <main>
+                <article class="post">
+    <header class="post-header">
+        <h1>Development Environment</h1>
+        <div class="post-meta">
+            <time datetime="2026-02-06T00:00:00+02:00">
+                2026-02-06
+            </time>
+        </div>
+    </header>
+
+    <div class="post-content">
+        <h1 id="operating-system-development-roadmap">Operating System Development Roadmap</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>This document describes the detailed roadmap for building <strong>potatOS</strong>, a minimal operating system developed entirely from scratch.</p>
+
+<p>The purpose of this roadmap is not only to define <em>what</em> will be built, but also <em>why</em> each step exists and <em>how</em> the system gradually evolves from raw hardware execution into a usable operating system.</p>
+
+<p>The roadmap is divided into phases, where each phase represents a core layer of the operating system and builds directly on top of the previous one.</p>
+
+<hr />
+
+<h2 id="core-components-overview">Core Components Overview</h2>
+
+<p>A traditional operating system is composed of several tightly connected subsystems.
+Each of the following components will be implemented progressively throughout the roadmap:</p>
+
+<ul>
+  <li>
+    <p><strong>Bootloader</strong>
+Responsible for initializing the system and loading the kernel into memory.</p>
+  </li>
+  <li>
+    <p><strong>Kernel</strong>
+The core of the operating system, managing CPU execution, memory, and hardware access.</p>
+  </li>
+  <li>
+    <p><strong>Interrupt Handling</strong>
+Enables communication between hardware devices and the CPU.</p>
+  </li>
+  <li>
+    <p><strong>Memory Management</strong>
+Controls how memory is allocated, protected, and accessed.</p>
+  </li>
+  <li>
+    <p><strong>Process Management</strong>
+Handles execution, scheduling, and isolation of programs.</p>
+  </li>
+  <li>
+    <p><strong>System Calls</strong>
+Provide a controlled interface between user programs and kernel functionality.</p>
+  </li>
+  <li>
+    <p><strong>Filesystem</strong>
+Allows persistent storage and structured access to data.</p>
+  </li>
+  <li>
+    <p><strong>Shell / User Interface</strong>
+Enables user interaction with the operating system.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="development-phases">Development Phases</h2>
+
+<h3 id="phase-1--bootloader-foundation">Phase 1 – Bootloader (Foundation)</h3>
+
+<p><strong>Goal:</strong> Gain control from the firmware and load the kernel.</p>
+
+<p>Tasks:</p>
+<ul>
+  <li>Run in real mode (BIOS environment).</li>
+  <li>Load the kernel binary from disk into memory.</li>
+  <li>Display minimal boot messages for debugging.</li>
+  <li>Set up a basic memory layout.</li>
+  <li>Jump to the kernel entry point.</li>
+</ul>
+
+<p>Key concepts:</p>
+<ul>
+  <li>Real mode</li>
+  <li>BIOS interrupts</li>
+  <li>Disk I/O</li>
+  <li>Memory addressing</li>
+  <li>Assembly language</li>
+</ul>
+
+<p>Outcome:</p>
+<ul>
+  <li>The system successfully loads and transfers control to the kernel.</li>
+</ul>
+
+<hr />
+
+<h3 id="phase-2--minimal-kernel-early-kernel">Phase 2 – Minimal Kernel (Early Kernel)</h3>
+
+<p><strong>Goal:</strong> Establish a stable execution environment for the kernel.</p>
+
+<p>Tasks:</p>
+<ul>
+  <li>Switch from real mode to protected mode.</li>
+  <li>Set up the Global Descriptor Table (GDT).</li>
+  <li>Initialize stack and segment registers.</li>
+  <li>Implement basic screen output from the kernel.</li>
+  <li>Create a clean kernel entry flow.</li>
+</ul>
+
+<p>Key concepts:</p>
+<ul>
+  <li>Protected mode</li>
+  <li>Segmentation</li>
+  <li>Low-level C and Assembly interaction</li>
+  <li>Bare-metal programming</li>
+</ul>
+
+<p>Outcome:</p>
+<ul>
+  <li>The kernel runs in protected mode and can execute structured code.</li>
+</ul>
+
+<hr />
+
+<h3 id="phase-3--hardware--interrupt-handling">Phase 3 – Hardware &amp; Interrupt Handling</h3>
+
+<p><strong>Goal:</strong> Enable communication with hardware devices.</p>
+
+<p>Tasks:</p>
+<ul>
+  <li>Set up the Interrupt Descriptor Table (IDT).</li>
+  <li>Implement basic Interrupt Service Routines (ISRs).</li>
+  <li>Handle CPU exceptions (faults).</li>
+  <li>Initialize hardware interrupts (IRQs).</li>
+  <li>Implement timer interrupts.</li>
+  <li>Add keyboard input support.</li>
+</ul>
+
+<p>Key concepts:</p>
+<ul>
+  <li>Interrupts and exceptions</li>
+  <li>PIC (Programmable Interrupt Controller)</li>
+  <li>Hardware abstraction</li>
+  <li>Asynchronous execution</li>
+</ul>
+
+<p>Outcome:</p>
+<ul>
+  <li>The kernel can react to hardware events and CPU faults.</li>
+</ul>
+
+<hr />
+
+<h3 id="phase-4--memory-management">Phase 4 – Memory Management</h3>
+
+<p><strong>Goal:</strong> Take control of memory usage and protection.</p>
+
+<p>Tasks:</p>
+<ul>
+  <li>Implement physical memory detection.</li>
+  <li>Create a basic physical memory allocator.</li>
+  <li>Enable paging.</li>
+  <li>Implement virtual memory mapping.</li>
+  <li>Protect kernel memory from invalid access.</li>
+</ul>
+
+<p>Key concepts:</p>
+<ul>
+  <li>Paging</li>
+  <li>Virtual memory</li>
+  <li>Page tables</li>
+  <li>Memory isolation</li>
+</ul>
+
+<p>Outcome:</p>
+<ul>
+  <li>The system safely manages memory and prevents corruption.</li>
+</ul>
+
+<hr />
+
+<h3 id="phase-5--process--system-management">Phase 5 – Process &amp; System Management</h3>
+
+<p><strong>Goal:</strong> Run multiple programs safely.</p>
+
+<p>Tasks:</p>
+<ul>
+  <li>Define a process structure.</li>
+  <li>Implement context switching.</li>
+  <li>Add a simple scheduler.</li>
+  <li>Create a system call interface.</li>
+  <li>Separate kernel mode and user mode.</li>
+</ul>
+
+<p>Key concepts:</p>
+<ul>
+  <li>Context switching</li>
+  <li>CPU privilege levels</li>
+  <li>Scheduling algorithms</li>
+  <li>User-space vs kernel-space</li>
+</ul>
+
+<p>Outcome:</p>
+<ul>
+  <li>The system can run multiple programs and switch between them.</li>
+</ul>
+
+<hr />
+
+<h3 id="phase-6--filesystem--program-execution">Phase 6 – Filesystem &amp; Program Execution</h3>
+
+<p><strong>Goal:</strong> Enable persistent storage and executable programs.</p>
+
+<p>Tasks:</p>
+<ul>
+  <li>Design a simple filesystem format.</li>
+  <li>Implement disk reading and writing.</li>
+  <li>Load programs from disk.</li>
+  <li>Create a basic executable format.</li>
+  <li>Support argument passing to programs.</li>
+</ul>
+
+<p>Key concepts:</p>
+<ul>
+  <li>Filesystem design</li>
+  <li>Block devices</li>
+  <li>Program loaders</li>
+  <li>Binary formats</li>
+</ul>
+
+<p>Outcome:</p>
+<ul>
+  <li>Programs can be stored, loaded, and executed.</li>
+</ul>
+
+<hr />
+
+<h3 id="phase-7--shell--user-interaction">Phase 7 – Shell &amp; User Interaction</h3>
+
+<p><strong>Goal:</strong> Provide a usable interface for users.</p>
+
+<p>Tasks:</p>
+<ul>
+  <li>Implement a command-line shell.</li>
+  <li>Parse user input.</li>
+  <li>Execute built-in commands.</li>
+  <li>Launch user programs.</li>
+  <li>Display system output cleanly.</li>
+</ul>
+
+<p>Key concepts:</p>
+<ul>
+  <li>Command parsing</li>
+  <li>Process spawning</li>
+  <li>User experience basics</li>
+</ul>
+
+<p>Outcome:</p>
+<ul>
+  <li>Users can interact with the operating system through a shell.</li>
+</ul>
+
+<hr />
+
+<h2 id="final-outcome">Final Outcome</h2>
+
+<p>After completing all phases, <strong>potatOS</strong> will be a functional minimal operating system capable of:</p>
+
+<ul>
+  <li>Booting on real hardware or emulators</li>
+  <li>Managing CPU, memory, and hardware</li>
+  <li>Running user programs</li>
+  <li>Handling files and user input</li>
+</ul>
+
+<p>Most importantly, this project serves as a deep learning journey into how operating systems work at the lowest level.</p>
+
+<hr />
+
+<h2 id="notes">Notes</h2>
+
+<p>This roadmap is intentionally incremental and flexible.
+Some phases may overlap, and certain features may evolve over time as the system grows and understanding deepens.</p>
+
+<p>The primary focus is <strong>learning, clarity, and correctness</strong>, not feature completeness.</p>
+
+
+    </div>
+</article>
+
+            </main>
+
+            <footer>
+                <p>© 2025 <strong><a href="https://saeeedhany.github.io/saeed/">Saeed</a></strong>. All rights reserved.</p>
+                <p>Building an OS from scratch</p>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="/potatos.org/assets/js/theme.js"></script>
+    <script src="/potatos.org/assets/js/mobile-menu.js"></script>
+    
+    <script src="/potatos.org/assets/js/toc.js"></script>
+    
+</body>
+</html>
