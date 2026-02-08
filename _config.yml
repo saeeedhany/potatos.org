@@ -3,7 +3,6 @@ logo: "./assets/images/cosmos.png"
 description: "Building an operating system from scratch"
 baseurl: "/potatos.org"
 url: "https://saeeedhany.github.io"
-
 markdown: kramdown
 permalink: /posts/:title/
 
@@ -11,6 +10,9 @@ collections:
   posts:
     output: true
     permalink: /posts/:title/
+  notes:
+    output: true
+    permalink: /notes/:title/
 
 defaults:
   - scope:
@@ -18,6 +20,11 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+  - scope:
+      path: ""
+      type: "notes"
+    values:
+      layout: "note"
 
 exclude:
   - Gemfile

@@ -58,12 +58,13 @@
                     </div>
                 </div>
 
-            <nav>
-                <ul>
-                    <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>~/home</a></li>
-                    <li><a href="{{ '/posts' | relative_url }}" {% if page.url == '/posts/' or page.layout == 'post' %}class="active"{% endif %}>~/posts</a></li>
-                </ul>
-            </nav>
+                <nav>
+                    <ul>
+                        <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>~/home</a></li>
+                        <li><a href="{{ '/posts' | relative_url }}" {% if page.url == '/posts/' or page.layout == 'post' %}class="active"{% endif %}>~/posts</a></li>
+                        <li><a href="{{ '/notes' | relative_url }}" {% if page.url == '/notes/' or page.layout == 'note' %}class="active"{% endif %}>~/notes</a></li>
+                    </ul>
+                </nav>
 
             <div class="social-links">
                 <h3>Connect</h3>

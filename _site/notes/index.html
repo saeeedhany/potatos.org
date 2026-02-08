@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Development Environment - potat</title>
+    <title>Notes - potat</title>
     <meta name="description" content="Building an operating system from scratch">
     <link rel="stylesheet" href="/potatos.org/assets/css/main.css">
     <link rel="stylesheet" href="/potatos.org/assets/css/all.min.css">
@@ -61,8 +61,8 @@
                 <nav>
                     <ul>
                         <li><a href="/potatos.org/" >~/home</a></li>
-                        <li><a href="/potatos.org/posts" class="active">~/posts</a></li>
-                        <li><a href="/potatos.org/notes" >~/notes</a></li>
+                        <li><a href="/potatos.org/posts" >~/posts</a></li>
+                        <li><a href="/potatos.org/notes" class="active">~/notes</a></li>
                     </ul>
                 </nav>
 
@@ -93,11 +93,6 @@
 
             <!-- Table of Contents for posts -->
             
-            <div class="toc" id="toc">
-                <h3>On This Page</h3>
-                <ul id="toc-list"></ul>
-            </div>
-            
 
             <button id="theme-toggle" class="theme-toggle">[light]</button>
         </aside>
@@ -105,132 +100,13 @@
         <!-- Main Content -->
         <div class="main-content">
             <main>
-                <article class="post">
-    <header class="post-header">
-        <h1>Development Environment</h1>
-        <div class="post-meta">
-            <time datetime="2026-02-06T00:00:00+02:00">
-                2026-02-06
-            </time>
-        </div>
-    </header>
+                <header>
+    <h1 class="page-title">Development Notes</h1>
+    <p style="color: var(--text-secondary); margin-top: 12px;">Random thoughts, learnings, and research notes from the OS development journey.</p>
+</header>
 
-    <div class="post-content">
-        <h1 id="development-environment-overview">Development Environment Overview</h1>
+<p style="color: var(--text-muted); padding: 40px 0;">No notes yet. Start documenting your learnings!</p>
 
-<p>In this post, I will explain the development environment used for building this operating system, including the required tools, technologies, and the reasons behind choosing each of them.</p>
-
-<p>The goal is to make it easy for anyone who wants to follow the same path or contribute to the project to set up everything properly.</p>
-
-<h2 id="operating-system">Operating System</h2>
-
-<p>I use a Linux-based system as the main development environment.</p>
-
-<p>Linux provides powerful tools, better low-level control, and a natural workflow for system programming and kernel development. It also integrates well with compilers, debuggers, and emulators required for OS development.</p>
-
-<h2 id="toolchain">Toolchain</h2>
-
-<p>To build and compile the operating system, the following tools are required:</p>
-
-<h3 id="gcc-cross-compiler">GCC Cross Compiler</h3>
-
-<p>A cross-compiler is used to compile code specifically for the target architecture (x86) without relying on the host system libraries.</p>
-
-<p>This ensures full control over the binary output and avoids unexpected dependencies.</p>
-
-<h3 id="nasm-assembler">NASM (Assembler)</h3>
-
-<p>NASM is used to write low-level assembly code, especially for:</p>
-
-<ul>
-  <li>Bootloader development</li>
-  <li>CPU initialization</li>
-  <li>Switching between real mode and protected mode</li>
-</ul>
-
-<p>Assembly is essential for interacting directly with hardware at early boot stages.</p>
-
-<h3 id="gnu-make">GNU Make</h3>
-
-<p>Make is used to automate the build process.</p>
-
-<p>It helps organize compilation steps, manage dependencies, and rebuild only the necessary parts when changes are made.</p>
-
-<h2 id="emulator--debugging">Emulator &amp; Debugging</h2>
-
-<h3 id="qemu">QEMU</h3>
-
-<p>QEMU is used to emulate the hardware environment and run the operating system safely without needing real hardware.</p>
-
-<p>It allows fast testing, debugging, and inspection of low-level behavior.</p>
-
-<h3 id="gdb">GDB</h3>
-
-<p>GDB is used for low-level debugging to:</p>
-
-<ul>
-  <li>Inspect memory and registers</li>
-  <li>Trace execution flow</li>
-  <li>Debug crashes and kernel panics</li>
-</ul>
-
-<p>This is critical when working with bare-metal code.</p>
-
-<h2 id="programming-languages">Programming Languages</h2>
-
-<p>The main stack used in this project includes:</p>
-
-<ul>
-  <li><strong>Assembly (x86)</strong> – for bootloader and early hardware control</li>
-  <li><strong>C</strong> – for kernel core logic and system components</li>
-</ul>
-
-<p>Assembly provides precise control, while C offers better structure and maintainability.</p>
-
-<h2 id="project-structure">Project Structure</h2>
-
-<p>The project is organized in a modular way to keep things clean and scalable:</p>
-
-<ul>
-  <li>Bootloader code</li>
-  <li>Kernel core</li>
-  <li>Drivers</li>
-  <li>Memory management</li>
-  <li>Build scripts</li>
-</ul>
-
-<p>This structure makes it easier to expand the system over time without major refactoring.</p>
-
-<h2 id="why-this-setup">Why This Setup?</h2>
-
-<p>This environment was chosen to:</p>
-
-<ul>
-  <li>Follow standard OS development practices</li>
-  <li>Maintain full control over the system</li>
-  <li>Learn low-level concepts deeply</li>
-  <li>Avoid abstractions that hide important details</li>
-</ul>
-
-<p>Every tool and technology plays a role in understanding how operating systems truly work under the hood.</p>
-
-<h2 id="getting-started">Getting Started</h2>
-
-<p>To start developing or experimenting with this project, you should have:</p>
-
-<ul>
-  <li>A Linux system</li>
-  <li>GCC cross compiler for x86</li>
-  <li>NASM</li>
-  <li>Make</li>
-  <li>QEMU</li>
-  <li>GDB</li>
-</ul>
-
-<p>Once these are installed, you can clone the repository and follow the build instructions provided in the main README.</p>
-
-    </div>
-</article>
 
             </main>
 
@@ -244,8 +120,6 @@
     <script src="/potatos.org/assets/js/theme.js"></script>
     <script src="/potatos.org/assets/js/mobile-menu.js"></script>
     <script src="/potatos.org/assets/js/repo-stats.js"></script>
-    
-    <script src="/potatos.org/assets/js/toc.js"></script>
     
 </body>
 </html>
