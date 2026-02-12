@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Post - vimOS</title>
+        <title>The Birth of vimOS - vimOS</title>
         <meta name="description" content="A modal-native operating system experiment focused on semantic command interaction">
         <link rel="stylesheet" href="/assets/css/main.css">
         <link rel="stylesheet" href="/assets/css/all.min.css">
@@ -20,7 +20,7 @@
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
         <!-- Use post-layout class for posts -->
-        <div class="site-wrapper">
+        <div class="post-layout">
             <!-- Sidebar -->
             <aside class="sidebar" id="sidebar">
                 <div class="sidebar-header">
@@ -94,6 +94,11 @@
 
                 <!-- Table of Contents for posts/notes (sidebar version for mobile/tablet) -->
                 
+                <div class="toc" id="toc">
+                    <h3>On This Page</h3>
+                    <ul id="toc-list"></ul>
+                </div>
+                
 
                 <button id="theme-toggle" class="theme-toggle">[light]</button>
             </aside>
@@ -101,21 +106,62 @@
             <!-- Main Content -->
             <div class="main-content">
                 <main>
-                <header>
-    <h1 class="page-title">Project Post</h1>
-</header>
+                <!-- This content goes INSIDE main-content wrapper in default.html -->
+<article class="post">
+    <header class="post-header">
+        <h1>The Birth of vimOS</h1>
+        <div class="post-meta">
+            <time datetime="2026-02-12T00:00:00+02:00">
+                2026-02-12
+            </time>
+        </div>
+    </header>
+    <div class="post-content" id="post-content">
+        <h2 id="why-i-left-botatos-behind">Why I Left botatOS Behind</h2>
 
-<ul class="post-list">
+<p>botatOS started as a broad hobby operating system: learn bootstrapping, understand kernels, and document progress. That phase was useful, but it stayed too generic. I was implementing known patterns without a clear interaction thesis.</p>
 
-<li class="post-item">
-    <div class="post-meta">2026-02-12</div>
-    <h3 class="post-title"><a href="/posts/the-birth-of-vimos/">The Birth of vimOS</a></h3>
-    <div class="post-excerpt">Why I Left botatOS Behind
+<p>I did not want to keep adding components just to mirror conventional systems. I wanted a core idea strong enough to shape every subsystem.</p>
 
-</div>
-</li>
+<h2 id="from-hobby-build-to-research-direction">From Hobby Build to Research Direction</h2>
 
+<p>vimOS is the result of that shift. The project is no longer “an OS from scratch” in the usual sense. It is now a research-oriented experiment in interaction design: can we build an operating system where modal semantics are the foundation rather than an application-level convenience?</p>
+
+<p>This means the architecture is guided by interaction theory first, then implementation.</p>
+
+<h2 id="modal-interaction-as-the-system-primitive">Modal Interaction as the System Primitive</h2>
+
+<p>Vim proved that modal workflows can reduce friction when commands are composable and intention is explicit. vimOS applies that model to operating system behavior.</p>
+
+<p>Instead of centering interaction around event callbacks and ad-hoc shells, the system is organized around explicit modes, semantic objects, and composable commands.</p>
+
+<h2 id="composable-commands-over-system-objects">Composable Commands Over System Objects</h2>
+
+<p>The central goal is to redefine system interaction through composable operations. Commands should be small, deterministic units that can be chained safely and inspected clearly.</p>
+
+<p>In practice, this requires:</p>
+
+<ul>
+  <li>Explicit command grammar</li>
+  <li>Stable object addressing</li>
+  <li>Deterministic execution rules</li>
+  <li>Minimal hidden state transitions</li>
 </ul>
+
+<h2 id="long-term-vision">Long-Term Vision</h2>
+
+<p>The long-term target is a fully usable modal-native operating system: daily interaction performed through modal semantics, with consistent behavior from low-level control to user workflows.</p>
+
+<h2 id="short-term-goal">Short-Term Goal</h2>
+
+<p>The current short-term milestone is a minimal theoretical implementation on RISC-V. The objective is to validate semantics and control flow, not to ship features quickly.</p>
+
+<h2 id="closing">Closing</h2>
+
+<p>vimOS is not just a renamed hobby OS. It is a deliberate change in direction toward a focused research program: exploring how operating systems can be designed around intention, composition, and modal control from first principles.</p>
+
+    </div>
+</article>
 
                 </main>
                 <footer>
@@ -125,6 +171,107 @@
             </div>
 
             <!-- Right TOC - ONLY for posts/notes, AS A SIBLING to main-content -->
+            
+            <aside class="right-toc" id="right-toc">
+                <h3>On This Page</h3>
+                <ul id="right-toc-list"></ul>
+            </aside>
+
+            <script>
+            // Generate TOC from headings
+            function generateTOC() {
+            const content = document.getElementById('post-content');
+            const rightTocList = document.getElementById('right-toc-list');
+            const sidebarTocList = document.getElementById('toc-list');
+
+if (!content) return;
+
+const headings = content.querySelectorAll('h2, h3');
+
+if (headings.length === 0) {
+const rightToc = document.getElementById('right-toc');
+const sidebarToc = document.getElementById('toc');
+if (rightToc) rightToc.style.display = 'none';
+if (sidebarToc) sidebarToc.style.display = 'none';
+return;
+}
+
+let tocHTML = '';
+let currentH2 = null;
+
+headings.forEach((heading, index) => {
+const id = heading.id || `heading-${index}`;
+heading.id = id;
+
+const text = heading.textContent;
+const level = heading.tagName.toLowerCase();
+
+if (level === 'h2') {
+if (currentH2 !== null) {
+tocHTML += '</ul></li>';
+}
+tocHTML += `<li><a href="#${id}" class="toc-link">${text}</a><ul>`;
+                         currentH2 = index;
+                         } else if (level === 'h3') {
+                         tocHTML += `<li><a href="#${id}" class="toc-link">${text}</a></li>`;
+                                                  }
+                                                  });
+
+if (currentH2 !== null) {
+tocHTML += '</ul></li>';
+}
+
+if (rightTocList) rightTocList.innerHTML = tocHTML;
+if (sidebarTocList) sidebarTocList.innerHTML = tocHTML;
+}
+
+function updateActiveTOC() {
+const headings = document.querySelectorAll('#post-content h2, #post-content h3');
+const tocLinks = document.querySelectorAll('.toc-link');
+
+let currentActive = null;
+const scrollPos = window.scrollY + 100;
+
+headings.forEach((heading) => {
+if (heading.offsetTop <= scrollPos) {
+currentActive = heading.id;
+}
+});
+
+tocLinks.forEach((link) => {
+link.classList.remove('active');
+if (link.getAttribute('href') === `#${currentActive}`) {
+link.classList.add('active');
+}
+});
+}
+
+function setupSmoothScroll() {
+document.querySelectorAll('.toc-link').forEach(link => {
+link.addEventListener('click', (e) => {
+e.preventDefault();
+const targetId = link.getAttribute('href').slice(1);
+const target = document.getElementById(targetId);
+if (target) {
+target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+history.pushState(null, null, `#${targetId}`);
+}
+});
+});
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+generateTOC();
+setupSmoothScroll();
+updateActiveTOC();
+});
+
+let scrollTimeout;
+window.addEventListener('scroll', () => {
+if (scrollTimeout) clearTimeout(scrollTimeout);
+scrollTimeout = setTimeout(updateActiveTOC, 50);
+});
+            </script>
             
         </div>
 
