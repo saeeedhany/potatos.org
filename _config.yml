@@ -1,8 +1,8 @@
 title: "vimOS"
 logo: "./assets/images/cosmos.png"
 description: "A modal-native operating system experiment focused on semantic command interaction"
-baseurl: ""
-url: "https://vimos.org"
+baseurl: "/potatos.org"
+url: "https://saeeedhany.github.io"
 markdown: kramdown
 permalink: /posts/:title/
 
